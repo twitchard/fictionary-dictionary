@@ -1,0 +1,8 @@
+{
+  "games": [
+    {
+      "roomName": "foo",
+      "bar": "baz"
+    }
+  ]
+}

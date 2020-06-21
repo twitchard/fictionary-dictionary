@@ -1,0 +1,120 @@
+{
+  "games": [
+    {
+      "roomName": "puccini",
+      "players": [],
+      "started": false,
+      "chat": [],
+      "words": [
+        {
+          "id": "ffcbe72773c9",
+          "spelling": "Hello",
+          "announced": false,
+          "revealed": true,
+          "deadline": "never",
+          "correctDefinition": "",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "1ca6dd6c084b43",
+          "spelling": "foo",
+          "announced": false,
+          "revealed": true,
+          "deadline": "never",
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "878b768435f8f",
+          "spelling": "foo2",
+          "announced": true,
+          "revealed": true,
+          "deadline": "never",
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "f52a6b7198dbb",
+          "spelling": "foo3",
+          "announced": true,
+          "revealed": true,
+          "deadline": 1592100932549,
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "13294de806bf41",
+          "spelling": "foo4",
+          "announced": true,
+          "revealed": true,
+          "deadline": 1592100272549,
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        }
+      ]
+    },
+    {
+      "roomName": "mozz",
+      "players": [],
+      "started": false,
+      "chat": [],
+      "words": [
+        {
+          "id": "69469023d794d",
+          "spelling": "",
+          "announced": false,
+          "revealed": true,
+          "deadline": "never",
+          "correctDefinition": "",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "de9ad5e299587",
+          "spelling": "foo",
+          "announced": false,
+          "revealed": true,
+          "deadline": "never",
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "e75fa4a107755",
+          "spelling": "foo2",
+          "announced": true,
+          "revealed": true,
+          "deadline": "never",
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "df8769cc84089",
+          "spelling": "foo3",
+          "announced": true,
+          "revealed": true,
+          "deadline": 1592688881977,
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        },
+        {
+          "id": "1889fcf608e3c9",
+          "spelling": "foo4",
+          "announced": true,
+          "revealed": true,
+          "deadline": 1592688221978,
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        }
+      ]
+    }
+  ]
+}
