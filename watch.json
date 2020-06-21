@@ -1,0 +1,12 @@
+{
+  "install": {
+    "include": ["^package\\.json$"],
+    "exclude": []
+  },
+  "restart": {
+    "include": ["^\\.env$", "^backend/", "^lib/", "server.js"],
+    "exclude": ["^frontend"]
+  },
+
+  "noSavedEvents": true
+}
