@@ -14,21 +14,21 @@ import {
   Card,
   Select,
   Divider,
-  jsx
+  jsx,
 } from "theme-ui";
 
 import {
-  addDefinitionAction,
-  updateDefinitionAction,
-  removeDefinitionAction,
+  addWordAction,
+  updateWordAction,
+  removeWordAction,
   announceWordAction,
   revealWordAction,
   hideWordAction,
-  reorderDefinitionsAction,
-  closeSubmissionsAction,
+  reorderWordsAction,
+  setDeadlineAction,
   sendChatAction,
   beginVotingAction,
-  endVotingAction
+  stopVotingAction,
 } from "../lib/game";
 
 import { Chat } from "./Chat";
@@ -61,7 +61,7 @@ const connectToServer = (
       socket.close();
     });
     socket.emit("connectAsMod", { roomName });
-    socket.on("update", game => {
+    socket.on("update", (game) => {
       console.log("got game");
       setGame(game);
     });
@@ -76,40 +76,37 @@ const connectToServer = (
         if (callback) socket.once(`ack${action_id}`, callback);
       };
       return setController({
-        addDefinition: callback => {
-          emit(addDefinitionAction(), callback);
+        addWord: (callback) => {
+          emit(addWordAction(), callback);
         },
-        updateDefinition: (id, spelling, definition, callback) => {
-          emit(updateDefinitionAction(id, spelling, definition), callback);
+        updateWord: (id, spelling, definition, callback) => {
+          emit(updateWordAction(id, spelling, definition), callback);
         },
-        removeDefinition: (id, callback) => {
-          emit(removeDefinitionAction(id), callback);
+        removeWord: (id, callback) => {
+          emit(removeWordAction(id), callback);
         },
         announceWord: (id, callback) => {
           emit(announceWordAction(id), callback);
         },
-        reorderDefinitions: (ids, callback) => {
-          emit(reorderDefinitionsAction(ids), callback);
+        reorderWords: (ids, callback) => {
+          emit(reorderWordsAction(ids), callback);
         },
         sendChat: (text, callback) => {
           emit(sendChatAction("moderator", text), callback);
         },
-        closeSubmissions: (id, expiry, callback) => {
+        setDeadline: (id, expiry, callback) => {
           console.log("expiry", expiry);
-          emit(
-            closeSubmissionsAction(id, expiry * 1000 + Date.now()),
-            callback
-          );
+          emit(setDeadlineAction(id, expiry * 1000 + Date.now()), callback);
         },
         reopenSubmissions: (id, callback) => {
-          emit(closeSubmissionsAction(id, "never"), callback);
+          emit(setDeadlineAction(id, "never"), callback);
         },
         beginVoting: (id, callback) => {
           emit(beginVotingAction(id), callback);
         },
-        endVoting: callback => {
-          emit(endVotingAction(), callback);
-        }
+        stopVoting: (callback) => {
+          emit(stopVotingAction(), callback);
+        },
       });
     });
   });
@@ -121,7 +118,7 @@ const WordCard = ({ n, id, ...rest }) => {
       m={2}
       p={3}
       sx={{
-        borderRadius: `sketchy${id % 5}`
+        borderRadius: `sketchy${id % 5}`,
       }}
       {...rest}
     ></Card>
@@ -199,15 +196,15 @@ const Submission = ({ spelling, playerName, definition }) => (
 
 const Submissions = ({ word, playerNames }) => {
   const others = playerNames.filter(
-    name =>
+    (name) =>
       word.submissions
-        .map(s => s.playerName)
-        .filter(submitterName => submitterName === name).length === 0
+        .map((s) => s.playerName)
+        .filter((submitterName) => submitterName === name).length === 0
   );
   return (
     <Box>
       <Flex sx={{ flexWrap: "wrap", justifyContent: "space-between" }}>
-        {word.submissions.map(submission => (
+        {word.submissions.map((submission) => (
           <Submission
             key={submission.playerName}
             spelling={word.spelling}
@@ -218,7 +215,7 @@ const Submissions = ({ word, playerNames }) => {
       {others.length > 0 && (
         <Box>
           <Heading as="h4">No submissions from</Heading>
-          {others.map(name => (
+          {others.map((name) => (
             <Text key={name}>{name}</Text>
           ))}
         </Box>
@@ -263,7 +260,7 @@ const AnnouncedWord = ({ word, controller, playerNames, refreshClosed }) => {
             setTimeout(() => setPickExpiryAlert(false), 5000);
             return;
           }
-          controller.closeSubmissions(word.id, Number(expiry), refreshClosed);
+          controller.setDeadline(word.id, Number(expiry), refreshClosed);
         }}
       >
         Close Submissions
@@ -274,7 +271,7 @@ const AnnouncedWord = ({ word, controller, playerNames, refreshClosed }) => {
         pr={4}
         pl={4}
         m={2}
-        onChange={e => setExpiry(e.target.value)}
+        onChange={(e) => setExpiry(e.target.value)}
       >
         <option value="" disabled={true} sx={{ color: "muted" }}>
           pick when...
@@ -302,7 +299,7 @@ const AnnouncedWord = ({ word, controller, playerNames, refreshClosed }) => {
       <Button
         variant="info"
         m={2}
-        onClick={() => controller.closeSubmissions(word.id, 0)}
+        onClick={() => controller.setDeadline(word.id, 0)}
       >
         Close now
       </Button>
@@ -377,11 +374,11 @@ const EditWord = ({ word, controller, setEditing, n }) => {
   return (
     <Box
       as="form"
-      onSubmit={e => {
+      onSubmit={(e) => {
         console.log("submitted");
         e.preventDefault();
 
-        controller.updateDefinition(word.id, spelling, definition, () =>
+        controller.updateWord(word.id, spelling, definition, () =>
           setEditing(false)
         );
       }}
@@ -393,7 +390,7 @@ const EditWord = ({ word, controller, setEditing, n }) => {
         name="spelling"
         placeholder="Spelling"
         value={spelling}
-        onChange={event => setSpelling(event.target.value)}
+        onChange={(event) => setSpelling(event.target.value)}
       />
       <Label htmlFor="definition" mt={4}>
         Definition
@@ -402,14 +399,14 @@ const EditWord = ({ word, controller, setEditing, n }) => {
         name="definition"
         placeholder="Definition"
         value={definition}
-        onChange={event => setDefinition(event.target.value)}
+        onChange={(event) => setDefinition(event.target.value)}
       />
       <Flex sx={{ flexDirection: "row" }} mt={2}>
         {actionButton}
         <Button
           type="button"
           variant="danger"
-          onClick={() => controller.removeDefinition(word.id)}
+          onClick={() => controller.removeWord(word.id)}
         >
           Delete
         </Button>
@@ -421,7 +418,7 @@ const EditWord = ({ word, controller, setEditing, n }) => {
 const Voting = ({ controller, game }) => {
   return (
     <Box>
-      <Button onClick={() => controller.endVoting()}>End Voting</Button>
+      <Button onClick={() => controller.stopVoting()}>End Voting</Button>
       <Box as="pre" sx={{ overflowX: "scroll" }}>
         {JSON.stringify(game, null, 2)}
       </Box>
@@ -482,15 +479,15 @@ const ModRoom = ({ roomName, io, origin }) => {
                 />
               </WordCard>
             ))}
-            handleReorder={ordering =>
-              controller.reorderDefinitions(ordering.map(i => words[i].id))
+            handleReorder={(ordering) =>
+              controller.reorderWords(ordering.map((i) => words[i].id))
             }
           />
         </React.Fragment>
       )}
 
-      <Button type="button" onClick={e => controller.addDefinition()}>
-        Add Definition
+      <Button type="button" onClick={(e) => controller.addWord()}>
+        Add Word
       </Button>
       <pre>{JSON.stringify(game, null, 2)}</pre>
     </React.Fragment>
@@ -498,5 +495,5 @@ const ModRoom = ({ roomName, io, origin }) => {
 };
 
 module.exports = {
-  ModRoom
+  ModRoom,
 };
