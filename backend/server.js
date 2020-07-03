@@ -29,8 +29,8 @@ app.get(
   "*",
   wrap(async (req, res) => {
     console.log(`serving ${req.path}`);
-    console.log(fs.statSync("dist/index.html").size);
-    while (!fs.existsSync("dist/index.html")) {
+    console.log(statSync("dist/index.html").size);
+    while (!existsSync("dist/index.html")) {
       await pause(200);
     }
     res.sendFile("index.html", { root: "dist" });

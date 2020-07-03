@@ -115,6 +115,23 @@
           "submissions": []
         }
       ]
+    },
+    {
+      "roomName": "Mom'sChair",
+      "players": [],
+      "chat": [],
+      "words": [
+        {
+          "id": "c6d29a42a3999",
+          "spelling": "foo4",
+          "announced": true,
+          "revealed": true,
+          "deadline": 1592792621567,
+          "correctDefinition": "bar",
+          "votes": [],
+          "submissions": []
+        }
+      ]
     }
   ]
 }
