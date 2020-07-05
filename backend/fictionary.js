@@ -1,13 +1,10 @@
-const modRoomName = roomName => `mod/${roomName}`;
-const playerRoomName = playerName => roomName =>
+const modRoomName = (roomName) => `mod/${roomName}`;
+const playerRoomName = (playerName) => (roomName) =>
   `player/${roomName}/${playerName}`;
 const { newGame, modView, playerView, update } = require("../lib/game");
 
 const getGame = async (db, roomName) => {
-  const ret = await db
-    .get("games")
-    .find({ roomName })
-    .value();
+  const ret = await db.get("games").find({ roomName }).value();
   if (!ret) {
     throw new Error("no such game " + roomName);
   }
@@ -15,41 +12,29 @@ const getGame = async (db, roomName) => {
 };
 
 const getOrCreateGame = async (db, roomName) => {
-  const game = await db
-    .get("games")
-    .find({ roomName })
-    .value();
+  const game = await db.get("games").find({ roomName }).value();
   if (game) return game;
   const ret = newGame(roomName);
-  await db
-    .get("games")
-    .push(ret)
-    .write();
+  await db.get("games").push(ret).write();
   return ret;
 };
 
 const updateGame = async (db, roomName, f) => {
   const game = await getGame(db, roomName);
   const ret = f(game);
-  await db
-    .get("games")
-    .remove({ roomName })
-    .write();
+  await db.get("games").remove({ roomName }).write();
 
-  await db
-    .get("games")
-    .push(ret)
-    .write();
+  await db.get("games").push(ret).write();
 
   return ret;
 };
 
 const fictionary = (io, db) => {
-  const nudge = async roomName => {
+  const nudge = async (roomName) => {
     const game = await getGame(db, roomName);
     io.to(modRoomName(roomName)).emit("update", modView(game));
     console.log(game.players);
-    game.players.map(playerName => {
+    game.players.map((playerName) => {
       io.to(playerRoomName(playerName)(roomName)).emit(
         "update",
         playerView(playerName)(game)
@@ -63,14 +48,14 @@ const fictionary = (io, db) => {
     socket.on("refresh", async () => {
       socket.emit("update", view(await getGame(db, roomName)));
     });
-    socket.on("action", async action => {
+    const now = Date.now();
+    socket.on("action", async (action) => {
       if (action.shape === "reset") {
-        await updateGame(db, roomName, () => newGame(roomName));
+        await updateGame(db, roomName, () => newGame(roomName, now));
       } else {
-        const newGame = await updateGame(db, roomName, game =>
-          update(game, action)
+        const newGame = await updateGame(db, roomName, (game) =>
+          update(game, action, now)
         );
-        console.log(newGame);
         await nudge(roomName);
         socket.emit(`ack${action.action_id}`);
       }
@@ -79,7 +64,7 @@ const fictionary = (io, db) => {
   io.on("reconnect", () => {
     console.log("reconnect");
   });
-  io.on("connection", socket => {
+  io.on("connection", (socket) => {
     console.log("connected");
     socket.on("connectAsMod", async ({ roomName }) => {
       const game = await getOrCreateGame(db, roomName);
@@ -87,12 +72,12 @@ const fictionary = (io, db) => {
     });
     socket.on("connectAsPlayer", async ({ roomName, playerName }) => {
       await getOrCreateGame(db, roomName);
-      const game = await updateGame(db, roomName, game => ({
+      const game = await updateGame(db, roomName, (game) => ({
         ...game,
         players: [
-          ...game.players.filter(x => x !== playerName),
-          playerName
-        ].sort()
+          ...game.players.filter((x) => x !== playerName),
+          playerName,
+        ].sort(),
       }));
 
       await join(
@@ -108,5 +93,5 @@ const fictionary = (io, db) => {
 module.exports = {
   fictionary,
   updateGame,
-  getGame
+  getGame,
 };
