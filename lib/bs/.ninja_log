@@ -1,0 +1,21 @@
+# ninja log v5
+# start_time end_time mtime command hash
+1	81	1598153324000000000	YourProjectName.cmi	51f31ae496f907b6
+1	135	1598153324000000000	src/lib/game.reast	fca64766811d213b
+135	140	1598153324000000000	src/lib/game.d	b28d2a1a69e8509d
+140	205	1598153324000000000	src/lib/game-YourProjectName.cmj	9f52b59efc9575b
+140	205	1598153324000000000	src/lib/game-YourProjectName.cmi	9f52b59efc9575b
+140	205	1598153324000000000	/app/src/lib/game.bs.js	9f52b59efc9575b
+1	156	1598153324000000000	src/lib/game-YourProjectName.cmj	ec62cad74c12a2ef
+1	156	1598153324000000000	src/lib/game-YourProjectName.cmi	ec62cad74c12a2ef
+1	156	1598153324000000000	/app/src/lib/game.bs.js	ec62cad74c12a2ef
+0	240	1598153537000000000	src/lib/game.reast	fca64766811d213b
+246	257	1598153537000000000	src/lib/game.d	b28d2a1a69e8509d
+257	287	1598153537000000000	src/lib/game-YourProjectName.cmj	ec62cad74c12a2ef
+257	287	1598153537000000000	src/lib/game-YourProjectName.cmi	ec62cad74c12a2ef
+257	287	1598153537000000000	/app/src/lib/game.bs.js	ec62cad74c12a2ef
+0	73	1598153574000000000	src/lib/game.reast	fca64766811d213b
+75	79	1598153574000000000	src/lib/game.d	b28d2a1a69e8509d
+83	112	1598153574000000000	src/lib/game-YourProjectName.cmj	ec62cad74c12a2ef
+83	112	1598153574000000000	src/lib/game-YourProjectName.cmi	ec62cad74c12a2ef
+83	112	1598153574000000000	/app/src/lib/game.bs.js	ec62cad74c12a2ef

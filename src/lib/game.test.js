@@ -1,5 +1,5 @@
-import * as Game from "./game";
-import { newGame, emptyGame, update, emptyWord } from "./game";
+const Game = require("./game");
+const { newGame, emptyGame, update, emptyWord } = require("./game");
 describe("Game", () => {
   describe(".update", () => {
     describe("addWord", () => {

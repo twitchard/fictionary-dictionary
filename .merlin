@@ -1,0 +1,12 @@
+####{BSB GENERATED: NO EDIT
+B lib/bs
+FLG -open YourProjectName
+FLG -ppx '/rbd/pnpm-volume/48efd6af-fb62-40dd-b041-becc024da94c/node_modules/.registry.npmjs.org/bs-platform/8.2.0/node_modules/bs-platform/linux/bsc.exe -as-ppx -bs-jsx 3'
+S /app/node_modules/bs-platform/lib/ocaml
+B /app/node_modules/bs-platform/lib/ocaml
+FLG -w +a-4-9-20-40-41-42-50-61-102
+S /app/node_modules/reason-react/lib/ocaml
+B /app/node_modules/reason-react/lib/ocaml
+S src/lib
+B lib/bs/src/lib
+####BSB GENERATED: NO EDIT}

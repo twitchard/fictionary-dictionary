@@ -1,10 +1,9 @@
-import express from "express";
-import { createServer } from "http";
-import socketIo from "socket.io";
-import { existsSync, statSync } from "fs";
-import { page, wrap } from "./utils";
-import low from "lowdb";
-import FileAsync from "lowdb/adapters/FileAsync";
+const express =require("express");
+const { createServer } = require("http");
+const socketIo = require("socket.io");
+const { existsSync, statSync } = require("fs");
+const low = require("lowdb");
+const FileAsync = require("lowdb/adapters/FileAsync");
 
 const app = express();
 const http = createServer(app);
@@ -27,14 +26,9 @@ low(adapter)
 app.use(express.static("dist"));
 app.get(
   "*",
-  wrap(async (req, res) => {
-    console.log(`serving ${req.path}`);
-    console.log(statSync("dist/index.html").size);
-    while (!existsSync("dist/index.html")) {
-      await pause(200);
-    }
+  (req, res) => {
     res.sendFile("index.html", { root: "dist" });
-  })
+  }
 );
 
 http.listen(process.env.PORT, () => {

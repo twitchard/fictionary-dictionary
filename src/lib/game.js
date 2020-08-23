@@ -1,5 +1,6 @@
-import applyUpdates from "immutability-helper";
-export const emptyWord = (id) => ({
+const applyUpdates = require("immutability-helper");
+
+const emptyWord = (id) => ({
   id,
   spelling: "",
   announced: false,
@@ -9,6 +10,7 @@ export const emptyWord = (id) => ({
   votes: [],
   submissions: [],
 });
+exports.emptyWord = emptyWord
 
 const expired = (now, defn) =>
   defn.deadline === "already" ||
@@ -28,13 +30,14 @@ const newGame = roomName => ({
 const uuid = () =>
   Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16);
 
-export const emptyGame = () => ({
+const emptyGame = () => ({
   roomName: "",
   players: [],
   chat: [],
   words: [],
 });
-export const newGame = (roomName) => ({
+exports.emptyGame = emptyGame
+const newGame = (roomName) => ({
   roomName,
   players: [],
   chat: [],
@@ -63,65 +66,78 @@ export const newGame = (roomName) => ({
     },
   ],
 });
+exports.newGame = newGame
 
-export const addWordAction = () => ({
+const addWordAction = () => ({
   shape: "addWord",
 });
+exports.addWordAction = addWordAction
 
-export const removeWordAction = (id) => ({
+const removeWordAction = (id) => ({
   shape: "removeWord",
   id,
 });
+exports.removeWordAction = removeWordAction
 
-export const updateWordAction = (id, spelling, correctDefinition) => ({
+const updateWordAction = (id, spelling, correctDefinition) => ({
   shape: "updateWord",
   id,
   spelling,
   correctDefinition,
 });
+exports.updateWordAction = updateWordAction
 
-export const reorderWordsAction = (ids) => ({
+const reorderWordsAction = (ids) => ({
   shape: "reorderWords",
   ids,
 });
+exports.reorderWordsAction = reorderWordsAction
 
-export const announceWordAction = (id) => ({
+const announceWordAction = (id) => ({
   shape: "announceWord",
   id,
 });
+exports.announceWordAction = announceWordAction
 
-export const unannounceWordAction = (id) => ({
+const unannounceWordAction = (id) => ({
   shape: "unannounceWord",
   id,
 });
+exports.unannounceWordAction = unannounceWordAction
 
-export const addPlayerAction = (name) => ({
+const addPlayerAction = (name) => ({
   shape: "addPlayer",
   name,
 });
+exports.addPlayerAction = addPlayerAction
 
-export const submitDefinitionAction = (id, playerName, definition) => ({
+const submitDefinitionAction = (id, playerName, definition) => ({
   shape: "submitDefinition",
   id,
   playerName,
   definition,
 });
+exports.submitDefinitionAction = submitDefinitionAction
 
-export const sendChatAction = (playerName, text) => ({
+const sendChatAction = (playerName, text) => ({
   shape: "sendChat",
   playerName,
   text,
 });
+exports.sendChatAction = sendChatAction
 
-export const setDeadlineAction = (id, deadline) => ({
+const setDeadlineAction = (id, deadline) => ({
   shape: "setDeadline",
   id,
   deadline,
 });
+exports.setDeadlineAction = setDeadlineAction
 
-export const beginVotingAction = (id) => ({ shape: "beginVoting", id });
+const beginVotingAction = (id) => ({ shape: "beginVoting", id });
+exports.beginVotingAction = beginVotingAction
 
-export const endVotingAction = () => ({ shape: "endVoting" });
+const endVotingAction = () => ({ shape: "endVoting" });
+exports.endVotingAction = endVotingAction
 
 const numberWords = (x) => ({
   ...x,
@@ -135,7 +151,7 @@ const onWord = (id, f, game) => {
   };
 };
 
-export const update = (game, action) => {
+const update = (game, action) => {
   if (action.shape === "addPlayer") {
     return applyUpdates(game, {
       players: { $push: [action.name] },
@@ -256,11 +272,13 @@ export const update = (game, action) => {
 
   throw new Error("Unknown action " + action.shape);
 };
+exports.update = update
 
 const sharedView = (game) => ({
   ...game,
   words: game.words.map(closeIfExpired(Date.now())),
 });
+
 const segmentSubmissions = (playerName, game) => ({
   ...game,
   words: game.words.map((w) => {
@@ -271,10 +289,15 @@ const segmentSubmissions = (playerName, game) => ({
     return { mySubmission, ...rest };
   }),
 });
+
 const hideUnannounced = (game) => ({
   ...game,
   words: game.words.filter((w) => w.announced),
 });
-export const modView = (game) => sharedView(game);
-export const playerView = (playerName) => (game) =>
+
+const modView = (game) => sharedView(game);
+exports.modView = modView
+
+const playerView = (playerName) => (game) =>
   hideUnannounced(segmentSubmissions(playerName, sharedView(game)));
+exports.playerView = playerView

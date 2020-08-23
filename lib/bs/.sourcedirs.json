@@ -1,0 +1,1 @@
+{ "dirs" : [ "src/" , "src/backend" , "src/lib" ] , "pkgs" : [ [ "bs-platform" , "/app/node_modules/bs-platform" ] , [ "reason-react" , "/app/node_modules/reason-react" ] ] , "generated" : [] }
